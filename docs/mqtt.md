@@ -39,6 +39,8 @@ To secure the connection, we use a custom Certificate Authority (CA) to sign bot
     # Change owner
     sudo chown [your_user] generate_*
     ```
+    If this doesn't fix it, you might need to run the individual generation scripts (`generate_ca.sh`, `generate_server_certs.sh` & `generate_client_certs.sh`) manually.
+
 3.  The script will:
     -   Generate a CA certificate and key in `mqtt/certs/ca/`.
     -   Generate a server certificate and key in `mqtt/certs/server/`.
@@ -90,7 +92,7 @@ You can verify the setup using the provided scripts. These scripts assume `mosqu
 You'll need to change most of the arguments passed:
   - The `--host` argument needs to be changed to the CN (IP-address of the broker).
   - The `--cafile`, `--cert` and `--key` arguments need to be changed to the certificates you created (e.g., `ca.crt`, `RPI.crt` & `RPI.key`).
-  - The `--topic` needs to be changed to the topic the server will be publishing on. You can also pas a wildcard (#) if you want to receive all published data.
+  - The `--topic` needs to be changed to the topic the server will be publishing on. You can also give a wildcard (#) as the topic if you want to receive all published data.
 
   Now run the script:
 ```bash
@@ -98,7 +100,7 @@ You'll need to change most of the arguments passed:
 ```
 
 **2. Publish (Sender):**
-You'll also need to change most of these arguments: 
+You'll also need to change most of the arguments passed: 
   - The `--host` argument needs to be changed to the CN (IP-address of the broker).
   - The `--cafile`, `--cert` and `--key` arguments need to be changed to the certificates you created (e.g., `ca.crt`, `test_pub.crt` & `test_pub.key`).
   - The `--topic` needs to be changed to a topic of your choosing.
