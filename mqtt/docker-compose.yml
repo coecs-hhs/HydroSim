@@ -8,4 +8,4 @@ services:
     volumes:
       - ./conf:/mosquitto/config
       - ./certs:/mosquitto/certs
-    user: "1883" # UID van de mosquitto-gebruiker in de container
+    user: "1883" # UID of the mosquitto-user in the container

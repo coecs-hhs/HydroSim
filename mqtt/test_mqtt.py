@@ -2,11 +2,11 @@ import os, sys, json
 import paho.mqtt.client as mqtt
 
 BROKER = os.getenv("MQTT_BROKER_URL","mqtt://192.168.2.55")
-TOPIC = os.getenv("MQTT_TOPIC", "test/topic")
+TOPIC = os.getenv("MQTT_TOPIC", "test")
 
 CA = os.getenv("MQTT_CA_CERT","certs/ca/ca.crt")
-KEY = os.getenv("MQTT_CLIENT_KEY","certs/server/server.key")
-CERT = os.getenv("MQTT_CLIENT_CERT","certs/server/server.crt")
+KEY = os.getenv("MQTT_CLIENT_KEY","certs/client/HydroSim.key")      #Change key path if necessary
+CERT = os.getenv("MQTT_CLIENT_CERT","certs/client/HydroSim.crt")    #Change certificate path if necessary
 TLS = os.getenv("MQTT_TLS_ENABLED","true") == "true"
 
 client = mqtt.Client(client_id=f"mqtt-publisher-{os.urandom(4).hex()}")
