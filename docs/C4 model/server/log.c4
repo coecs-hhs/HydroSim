@@ -18,9 +18,10 @@ model {
         }
 
         component osnode 'OpenSearch-Node' {
-            description 'Genereert logs'
+            description 'Haalt logs op'
             style {}
-            -> fb 'Stuurt ruwe logdata door naar de'
+            -> osdashboard 'Stuurt logdata door naar de'
+            -> server.db 'Haalt logdata op uit'
         }
 
         component osdashboard 'OpenSearch-Dashboard' {
@@ -36,7 +37,7 @@ model {
 views {
     view logview of server.log {
         title 'Server / log'
-        include 
+        include
             *,
             server.ui,
 
