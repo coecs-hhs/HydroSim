@@ -1,0 +1,32 @@
+model {
+    extend server.epanet {
+        component EPAnet {
+            description 'Python code voor het simuleren van waternetwerken'
+            style {
+            }
+            
+            -> server.plc-zone 'Watersimulatie data (JSON) doorsturen'
+            -> MQTTClient 'Stuurt JSON data door naar de fysieke hardware'
+        }
+
+        component MQTTClient 'MQTT client'{
+            description 'Publisht de JSON data uit EPAnet naar de MQTT broker.'
+            style {
+            }
+            -> server.hwconnectie.MQTT-Broker 'Publisht EPAnet JSON data voor de fysieke hardware naar'
+        }
+    }
+}
+
+views {
+    view epanetview of server.epanet {
+        title 'Watersimulatie programma'
+        description 'Containers in het EPAnet programma'
+        include 
+            *
+
+        style server.plc-zone, server.hwconnectie {
+            color muted
+        }
+    }
+}
