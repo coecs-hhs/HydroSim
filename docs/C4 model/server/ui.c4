@@ -4,7 +4,6 @@ model {
             description 'SCADA visuele interface voor het aansturen van de waterdistributieplant.'
             style {}
             
-            -> server.log 'Al het verkeer loggen'
             -> server.db 'Configuratie aanpassen'
             -> server.plc-zone 'Actuatoren aansturen'
         }
@@ -17,7 +16,6 @@ model {
             }
 
             hacker -> Webserver 'Probeert in de OT omgeving binnen te breken via de' 
-            -> server.log 'Al het verkeer loggen'
             -> server.db 'Dynamisch data opslaan'
         }
     }
