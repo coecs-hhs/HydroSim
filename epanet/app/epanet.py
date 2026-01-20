@@ -61,8 +61,14 @@ zone4 = (
     "plc-zone4" if not DEBUG else ("localhost:5026" if LOCALHOST else "127.0.0.1:5026")
 )
 
+# Offset mapping to epanet id
 PUMP_MAPPING = {
-    zone0: {"pump4": 0, "pump2": 1, "pump1": 2, "pump3": 3},
+    zone0: {
+        "pump1": 4,
+        "pump2": 5,
+        "pump3": 6,
+        "pump4": 7,
+    },
     zone1: {"pump1": 1},
     zone2: {"pump1": 1},
     zone3: {"pump1": 1},
@@ -71,29 +77,29 @@ PUMP_MAPPING = {
 
 VALVE_MAPPING = {
     zone0: {
-        "valve0": 8,
-        "valve8": 9,
-        "valve7": 10,
-        "valve3": 11,
-        "valve4": 12,
-        "valve1": 13,
-        "valve2": 14,
-        "valve5": 15,
-        "valve6": 16,
+        "valve0": 17,  # Reservior
+        "valve1": 18,  # IN T1
+        "valve2": 19,  # OUT T1
+        "valve3": 20,  # IN T2
+        "valve4": 21,  # OUT T2
+        "valve5": 22,  # IN T3
+        "valve6": 23,  # OUT T3
+        "valve7": 24,  # IN T4
+        "valve8": 25,  # OUT T4
     },
-    
-    zone1: {"valve1": 1, "valve2": 3},
-    zone2: {"valve1": 1, "valve2": 3},
-    zone3: {"valve1": 1, "valve2": 3},
-    zone4: {"valve1": 1, "valve2": 3},
+    zone1: {"valve1": 3, "valve2": 5},
+    zone2: {"valve1": 3, "valve2": 5},
+    zone3: {"valve1": 3, "valve2": 5},
+    zone4: {"valve1": 3, "valve2": 5},
 }
 
+# right adjacent node for flow
 JUNCTION_FLOW_NEEDED: list[str] = [
     "z0-junction1",
-    "32",
-    "31",
-    "30",
-    "29",
+    "z1-point1",
+    "z2-point1",
+    "z3-point1",
+    "z4-point1",
     # these seem logical but would not work because not all the junctions and pipes have a prefix of the zone they are in
     # "z1-junction1",
     # "z2-junction1",
@@ -140,10 +146,10 @@ def read_plc(zone, client: ModbusTcpClient) -> dict[str, dict]:
     nodes, links = get_zone_items(zone)
     try:
         logger.info("Reading PLC for zone %s", zone)
-        if LOCALHOST and not DEBUG:
+        if not LOCALHOST and not DEBUG:
             zone_host = client.comm_params.host
         else:
-            zone_host = client.comm_params.host #+ ":" + str(client.comm_params.port)
+            zone_host = client.comm_params.host + ":" + str(client.comm_params.port)
 
         nodes = {
             ep.getNodeNameID(node): {"type": ep.getNodeType(node), "index": node}
@@ -160,15 +166,16 @@ def read_plc(zone, client: ModbusTcpClient) -> dict[str, dict]:
             # links data
             for element, data in links.items():
                 ltype = data["type"]
-                if ltype in ["PUMP", "VALVE", "TCV"]:
-                    map_dict = PUMP_MAPPING if ltype == "PUMP" else VALVE_MAPPING
+                if ltype not in ["PUMP", "VALVE", "TCV", "FCV"]:
+                    continue
 
-                    idx = get_coil_index(zone_host, element, map_dict)
+                map_dict = PUMP_MAPPING if ltype == "PUMP" else VALVE_MAPPING
 
-                    if idx < len(rr.bits):
-                        is_running = rr.bits[idx]
-                        links[element].update({"status": 1.0 if is_running else 0.0})
-            
+                idx = get_coil_index(zone_host, element, map_dict)
+
+                if idx < len(rr.bits):
+                    is_running = rr.bits[idx]
+                    links[element].update({"status": 1.0 if is_running else 0.0})
 
         logger.info(
             "Finished reading PLC for %s (nodes=%d, links=%d)",
@@ -240,7 +247,7 @@ def set_linkdata(links: dict[str, dict]):
                         ep.setLinkSettings(index, new_status)
                     pass
                 # there are more valve types but only the TCV is used
-                case "VALVE" | "TCV":
+                case "VALVE" | "TCV" | "FCV":
                     pass
                 case _:
                     pass
@@ -254,8 +261,9 @@ def float_to_registers(value):
 
 def flow_needed(nodes_list: numpy.ndarray[list]):
     for nodes in nodes_list:
-        if str(nodes[1]) in JUNCTION_FLOW_NEEDED:
-            return True
+        node = str(nodes[1])
+        if node in JUNCTION_FLOW_NEEDED:
+            return node
     else:
         return False
 
@@ -280,46 +288,51 @@ def write_plc(
         for link, data in links_data.items():
             nodes = ep.getNodesConnectingLinksID(data["index"])
 
-            if flow_needed(nodes):
+            if node := flow_needed(nodes):
                 flow = data["flow"]
 
+                # set flow 0 when pressure is negetive because the network is disconnected and still calculates the values
+                if nodes_data[node]["pressure"] < 0:
+                    flow = 0.0
+                    
                 if PRINTING:
                     logger.info(
-                        f"{zone_host:<14} | {link:<12} | {'METER':<6} | {f'FLOW {flow}':<16} | Reg 700"
+                        f"{zone_host:<14} | {f'{link}-{node}':<12} | {'METER':<6} | {f'FLOW {flow}':<16} | Reg 700"
                     )
                 try:
-                    client.write_registers(address=700, values=float_to_registers(flow))
+                    client.write_registers(
+                        address=700, values=float_to_registers(flow)
+                    )
                 except Exception as e:
                     logger.debug(
-                        "Failed writing flow registers for %s %s: %s",
+                        "Failed writing flow registers for %s %s-%s: %s",
                         zone_host,
                         link,
+                        node,
                         e,
                     )
                     pass
 
-            if data.get("type") in ["PUMP", "VALVE", "TCV"]:
+            if data.get("type") in ["PUMP", "VALVE", "TCV", "FCV"]:
                 if PRINTING:
                     status = data.get("status")
-                    if data["type"] == "VALVE":
-                        epa_text = "OPEN" if status > 0 else "DICHT"
-                        plc_text = "OPEN" if status else "DICHT"
+                    if data["type"] in ["VALVE", "TCV", "FCV"]:
+                        text = "OPEN" if status else "DICHT"
                     else:
-                        epa_text = "AAN" if status > 0 else "UIT"
-                        plc_text = "AAN" if status else "UIT"
+                        text = "AAN" if status else "UIT"
 
                     map_dict = PUMP_MAPPING if data["type"] == "PUMP" else VALVE_MAPPING
                     idx = get_coil_index(zone_host, link, map_dict)
 
-                    plc_display = f"{plc_text} (Coil {idx})"
+                    plc_display = f"{text} (Coil {idx})"
                     logger.info(
-                        f"{zone_host:<14} | {link:<12} | {data['type']:<6} | {epa_text:<16} | {plc_display}"
+                        f"{zone_host:<14} | {link:<12} | {data['type']:<6} | {text:<16} | {plc_display}, {status}"
                     )
 
         for node, data in nodes_data.items():
             if data.get("type") == "TANK":
                 try:
-                    tank_num = int("".join(filter(str.isdigit, node)))
+                    tank_num = int("".join(filter(str.isdigit, node))) - 1
                     level = data.get("level")
 
                     is_low, is_high = level < 5.0, level > 15.0
@@ -469,7 +482,7 @@ def get_linkdata(links):
                 link_data["efficiency"] = round(ep.getLinkPumpEfficiency(link), 3)
                 link_data["state"] = ep.getLinkPumpState(link)
             # there are more valve types but only the TCV is used
-            case "VALVE" | "TCV":
+            case "VALVE" | "TCV" | "FCV":
                 link_data["velocity"] = round(float(ep.getLinkVelocity(link)), 3)
                 pass
             case _:
@@ -537,9 +550,11 @@ def main():
                 links_data = get_linkdata(links)
 
                 write_plc(client, nodes_data, links_data)
-                mqtt_client.publish(TOPIC, str(nodes_data))
-                mqtt_client.publish(TOPIC, str(links_data))
-            
+                try:
+                    mqtt_client.publish(TOPIC, str(nodes_data))
+                    mqtt_client.publish(TOPIC, str(links_data))
+                except ValueError as e:
+                    logger.error("%s: '%s'", e, TOPIC)
 
             time.sleep(5)
             if tstep <= 0:
