@@ -23,7 +23,7 @@ model {
             style {}
 
             -> ui.SCADA-LTS 'EPANET watersimulatie data doorsturen'
-            -> epanet 'Veranderingen in actuatoren doorsturen'
+            -> epanet.EPAnet 'Veranderingen in actuatoren doorsturen'
         }
 
         container db 'Database' {

@@ -25,7 +25,7 @@ views {
         include 
             *
 
-        style server.plc-zone, server.hwconnectie {
+        style server.plc-zone, server.hwconnectie, server.log {
             color muted
         }
     }

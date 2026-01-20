@@ -1,12 +1,21 @@
 model {
     extend hardware.gateway {
-        component msgprepper 'Message prepper' {
-            description 'Zet JSON-berichten om naar Modbus-berichten'
+        component modbusConnector 'Modbus connector' {
+            description 'Zet de data uit de objecten uit de object interpreter om naar modbus instructies'
             style {
                 color green
             }
 
-            -> hardware.plc0 'Geeft omgezette data door aan'
+            -> hardware.plc0 'Stuurt modbus instructies met de data door naar'
+        }
+
+        component interpreter 'Object interpreter' {
+            description 'Zet JSON-berichten om naar objecten van klassen, gebaseerd op het soort objecten aanwezig in de simulatie'
+            style {
+                color green
+            }
+
+            -> modbusConnector 'Geeft objecten van klassen door aan'
         }
 
         component mqttclient 'MQTT-client' {
@@ -15,7 +24,7 @@ model {
                 color green
             }
 
-            -> msgprepper 'Geeft binnengekomen JSON-berichten door aan'
+            -> interpreter 'Geeft binnengekomen JSON-berichten door aan'
         }
     }
 }

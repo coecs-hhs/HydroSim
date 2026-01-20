@@ -11,8 +11,8 @@ model {
 
         container plc0 'PLC' {
             description '- Regelt de fysiek weergave van de SCADA.
-                - S7-300 of S7-1200 series PLC.
-                - Idealiter interchangable. 
+                - S7-1200 series PLC.
+                - Interchangable met andere PLC\'s die modbus TCP ondersteunen. 
             '
             style {
                 color green
