@@ -8,3 +8,4 @@ epanet/app/*_temp*
 /node_modules
 epanet/app/epanet.logepanet/app/epanet.log
 *.log
+mqtt/certs
