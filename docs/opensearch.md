@@ -1,5 +1,5 @@
 # OpenSearch
-OpenSearch is an open-source dashboard that we use to [automatically ingest](https://opensearch.org/docs/latest/observing-your-data/log-ingestion/) multiple log files to monitor Apache and Scada-LTS access logs.
+OpenSearch is an open-source dashboard that we use to [automatically ingest](https://opensearch.org/docs/latest/observing-your-data/log-ingestion/) multiple log files to monitor Apache, Scada-LTS, and EPANET logs.
 
 ## Screenshots
 For example, the `webserver/log/apache2/access.log` log file is read and then visualized in our OpenSearch dashboard through a log ingestion workflow.
@@ -34,12 +34,15 @@ This diagram shows the log ingestion workflow before it can be visualized in the
 The credentials for the OpenSearch dashboard are set in `opensearch/opensearch.env`, in our case `admin:Patat123!`. Note that when setting one it requires at least a lowercase character, an uppercase character, a number and a symbol, otherwise OpenSearch will refuse to run.
 
 ## Index pattern
-Before the log files can be ingested in OpenSearch Dashboard they need to be indexed first, which requires adding an [index pattern](https://opensearch.org/docs/latest/dashboards/management/index-patterns/). This can be done via `Discovery -> Create index pattern` and adding the  `apache*` index pattern.
+Before the log files can be explored in OpenSearch Dashboard they need a data view (index pattern). Create the following:
+
+- `apache*` with time field `@timestamp`
+- `epanet_logs*` with time field `@timestamp`
 
 ![](https://github.com/user-attachments/assets/21962c37-8774-4c5b-a84e-af197924fb68)
 
 ## Log ingestion workflow
-The log file paths are defined in the `docker-compose.yaml`. For example The `/var/log/apache2` folder in the webserver container is mapped to `./webserver/log/apache2` on the host machine, which then allows the fluent-bit container to ingest the `./webserver/log/apache2/access.log` log file to `/var/log/test.log` in the OpenSearch container.
+The log file paths are defined in the `docker-compose.yaml`. For example the `/var/log/apache2` folder in the webserver container is mapped to `./webserver/log/apache2` on the host machine, which then allows the fluent-bit container to ingest `./webserver/log/apache2/access.log` into the log pipeline.
 ```yml
   webserver:
     container_name: webserver
@@ -50,8 +53,18 @@ The log file paths are defined in the `docker-compose.yaml`. For example The `/v
   fluent-bit:
     container_name: fluent-bit
     volumes:
-      - ./webserver/log/apache2/access.log:/var/log/test.log
+      - ./webserver/log/apache2:/var/log/webserver
+      - ./scadalts/tomcat_log:/var/log/scadalts
+      - ./epanet/app:/var/log/epanet:ro
 ```
+
+### Pipelines
+Data Prepper exposes separate HTTP ports for each pipeline:
+
+- `log-pipeline` on port `2021` with path `/log/ingest` (Apache + Scada-LTS)
+- `epanet-pipeline` on port `2022` with path `/log/epanet`
+
+The pipelines are defined in `opensearch/log_pipeline.yaml` and use `@timestamp` for time-based filtering in Dashboards. EPANET log timestamps are parsed from the application log format.
 
 ## Testing
 When visiting the (WordPress) web server on http://127.0.0.1:80 the `access.log` will be updated and should be automatically ingested to the OpenSearch dashboard.
@@ -111,3 +124,10 @@ Which should return the following JSON response.
 The scadalts container log files are in `/usr/local/tomcat/logs` and are created by user and date, for example `localhost_access_log.2025-02-12.txt` which would require us writing a script to properly implement automatic log file ingestion.
 
 ![](https://github.com/user-attachments/assets/4af86778-5e30-491f-a9b8-f8c3facccd14)
+
+## Logging EPANET
+EPANET writes logs to `epanet/app/epanet.log` inside the container. This file is mounted into fluent-bit at `/var/log/epanet/epanet.log` and shipped to the `epanet_logs` index via the epanet pipeline.
+
+```sh
+curl -X GET -u 'admin:Patat123!' -k 'https://localhost:9200/epanet_logs/_search?pretty&size=1'
+```
