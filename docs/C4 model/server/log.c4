@@ -5,6 +5,9 @@ model {
             style {}
 
             -> dp 'Stuurt ontvangen logdata door naar de'
+            -> server.epanet.EPAnet 'Haalt watersimulatie logs op uit'
+            -> server.ui.SCADA-LTS 'Haalt al het gelogde verkeer op uit'
+            -> server.ui.Webserver 'Haalt al het gelogde verkeer op uit'
         }
 
         component dp 'Data-prepper' {
@@ -37,12 +40,9 @@ views {
             *,
             server.ui,
 
-<<<<<<< HEAD
-=======
         style server.ui, user, server.db {
             color muted
         }
 
->>>>>>> c3d4c9ae6ca439efa72f112d8c4c6a677c826915
     }
 }

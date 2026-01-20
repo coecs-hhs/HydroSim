@@ -5,27 +5,30 @@ model {
             style {
             }
             
-<<<<<<< HEAD
-            -> hardware.gateway 'Stuurt MQTT-berichten naar'
-=======
             -> hardware.gateway.mqttclient 'Stuurt MQTT-berichten naar'
->>>>>>> c3d4c9ae6ca439efa72f112d8c4c6a677c826915
         }
 
-        component MQTT-Client {
-            description 'Publisht berichten op de juiste topics.'
-            style {
-            }
-            -> MQTT-Broker 'Publisht berichten voor fysieke hardware naar'
-        }
+        // component MQTT-Client {
+        //     description 'Publisht berichten op de juiste topics.'
+        //     style {
+        //     }
+        //     -> MQTT-Broker 'Publisht berichten voor fysieke hardware naar'
+        // }
 
-        component MessagePrepper "Message prepper" {
-            description 'Zet SCADA informatie om naar JSON format voor in een MQTT-bericht.'
-            style {
-            }
-            server.SCADA-LTS -> MessagePrepper 'Stuurt data door om een bericht naar de hardware te sturen'
-            -> MQTT-Client 'Biedt geformatteerde JSON berichten aan'
-        }
+        // component ObjectClassifier "Object classifier" {
+        //     description 'Zet per zone alle objecten uit de JSON om naar klasse-objecten'
+        //     style {
+        //     }
+        //     -> MQTT-Client 'Publisht berichten voor fysieke hardware naar'
+        // }
+
+        // component JSONInterpreter "JSON interpreter" {
+        //     description 'Zet SCADA informatie om naar JSON format voor in een MQTT-bericht.'
+        //     style {
+        //     }
+        //     server.epanet -> JSONInterpreter 'Stuurt watersimulatie-data in JSON door om een bericht naar de hardware te sturen'
+        //     -> ObjectClassifier 'Biedt geformatteerde JSON berichten aan'
+        // }
     }
 }
 
@@ -36,11 +39,7 @@ views {
         include 
             *
 
-<<<<<<< HEAD
-        style server.db, server.fb, server.plc-zone, user, hacker, server.log {
-=======
         style server.ui {
->>>>>>> c3d4c9ae6ca439efa72f112d8c4c6a677c826915
             color muted
         }
     }
