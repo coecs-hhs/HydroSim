@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 ./generate_ca.sh
 
 ./generate_server_certs.sh
