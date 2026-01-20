@@ -1,53 +1,57 @@
 #!/bin/bash
 # =====================================================
 # Script: generate_ca.sh
-# Doel:  Genereert een CA private key en rootcertificaat
+# Goal: Generates a CA private key and rootcertificate
 # =====================================================
 
-# Stop bij fouten
+# Stop in case of errors
 set -e
 
-# Vraag om de Common Name
-read -p "Voer de Common Name (CN) in voor de CA (bijv. MyCA): " CN
+# Ask for a Common Name
+read -p "Enter the Common Name (CN) for the CA (e.g. MyCA): " CN
 
-# Controleer of CN niet leeg is
+# Check if CN isn't empty
 if [ -z "$CN" ]; then
-  echo "Fout: Common Name mag niet leeg zijn."
+  echo "Error: Common Name can not be empty."
   exit 1
 fi
 
-# Paden (pas eventueel aan)
+# Paths (change if necessary)
 BASE_DIR="./certs"
 CA_DIR="$BASE_DIR/ca"
 
-# Maak de CA directory aan als deze niet bestaat
+# Create the CA directory if it doesn't exist
 if [ ! -d "$CA_DIR" ]; then
-  echo "CA directory bestaat niet. Maken van $CA_DIR..."
-  mkdir -p "$CA_DIR"
+  echo "CA directory doesn't exist yet. Creating $CA_DIR..."
+  mkdir -p "$CA_DIR" || {
+    echo "Error: Couldn't create directory $CA_DIR" >&2
+    exit 1
+  }
 fi
 
-# Bestandspaden
+# Filepaths
 CA_KEY="$CA_DIR/ca.key"
 CA_CERT="$CA_DIR/ca.crt"
 
 echo "-------------------------------------------"
-echo "Genereren van CA private key..."
+echo "Generating CA private key..."
 echo "-------------------------------------------"
 
 openssl genrsa -out "$CA_KEY" 4096
 
-# Stel permissies van de private key in zodat de container het bestand kan lezen
+# Set the permissions of the private key so the mosquitto container can read the file
 chmod 644 "$CA_KEY"
 
 echo "-------------------------------------------"
-echo "Aanmaken van CA rootcertificaat (10 jaar geldig)..."
+echo "Creating the CA rootcertificate (valid for 10 years)..."
 echo "-------------------------------------------"
 
+# Creating the rootcertificate (change -subj parameters if necessary)
 openssl req -new -x509 -days 3650 -key "$CA_KEY" -out "$CA_CERT" -subj "/C=NL/O=HHS/CN=${CN}"
 
 echo "-------------------------------------------"
-echo "CA certificaat succesvol gegenereerd!"
-echo "Bestanden:"
+echo "CA certificate succesfully generated!"
+echo "Files:"
 echo "  Private key : $CA_KEY"
-echo "  Certificaat : $CA_CERT"
+echo "  Certificate : $CA_CERT"
 echo "-------------------------------------------"

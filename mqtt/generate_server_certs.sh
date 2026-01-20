@@ -1,54 +1,58 @@
 #!/bin/bash
 # =====================================================
 # Script: generate_server_certs.sh
-# Doel:  Genereert een server private key + certificaat voor Mosquitto TLS
+# Doel:  Generates a server private key and certificate for Mosquitto TLS
 # =====================================================
 
-# Stop bij fouten
+# Stop in case of errors
 set -e
 
-# Vraag om de Common Name
-read -p "Voer de Common Name (CN) in voor de server (bijv. localhost, broker.mijndomein.nl of het IP-adres): " CN
+# Ask for the domain of the server (e.g. in most cases the IP-address of the server)
+read -p "Enter de domain of the server (e.g. The IP-adres, broker.mydomain.nl or localhost): " CN
 
-# Controleer of CN niet leeg is
+# Check if CN isn't empty
 if [ -z "$CN" ]; then
-  echo "Fout: Common Name mag niet leeg zijn."
+  echo "Error: Common Name can not be empty."
   exit 1
 fi
 
-# Paden (pas aan indien nodig)
+# Paths (change if necessary)
 BASE_DIR="./certs"
 SERVER_DIR="$BASE_DIR/server"
 CA_DIR="$BASE_DIR/ca"
 
-# Maak de server directory aan als deze niet bestaat
+# Create the server directory if it doesn't exist
 if [ ! -d "$SERVER_DIR" ]; then
-  echo "Server directory bestaat niet. Maken van $SERVER_DIR..."
-  mkdir -p "$SERVER_DIR"
+  echo "Server directory doesn't exist yet. Creating $SERVER_DIR..."
+  mkdir -p "$SERVER_DIR" || {
+    echo "Error: Couldn't create directory $SERVER_DIR" >&2
+    exit 1
+  }
 fi
 
-# Bestandspaden
+# Filepaths
 KEY_FILE="$SERVER_DIR/server.key"
 CSR_FILE="$SERVER_DIR/server.csr"
 CRT_FILE="$SERVER_DIR/server.crt"
 
 echo "-------------------------------------------"
-echo "Genereren van server private key..."
+echo "Generating server private key..."
 echo "-------------------------------------------"
 
 openssl genrsa -out "$KEY_FILE" 4096
 
-# Stel permissies van de server key in zodat de container het bestand kan lezen
+# Set the permissions of the server private key so the mosquitto container can read the file
 chmod 644 "$KEY_FILE"
 
 echo "-------------------------------------------"
-echo "Aanmaken van server CSR..."
+echo "Generating the server CSR..."
 echo "-------------------------------------------"
 
+# Creating the server CSR (change -subj parameters if necessary)
 openssl req -new -key "$KEY_FILE" -out "$CSR_FILE" -subj "/C=NL/O=HHS/CN=${CN}"
 
 echo "-------------------------------------------"
-echo "Ondertekenen met CA (1 jaar geldig)..."
+echo "Signing with CA (valid for 1 year)..."
 echo "-------------------------------------------"
 
 openssl x509 -req -in "$CSR_FILE" \
@@ -59,9 +63,9 @@ openssl x509 -req -in "$CSR_FILE" \
   -days 365
 
 echo "-------------------------------------------"
-echo "Server certificaat succesvol gegenereerd!"
-echo "Bestanden:"
+echo "Server certificate succesfully generated!"
+echo "Files:"
 echo "  Private key : $KEY_FILE"
-echo "  Certificaat : $CRT_FILE"
+echo "  Certificate : $CRT_FILE"
 echo "  CSR         : $CSR_FILE"
 echo "-------------------------------------------"
