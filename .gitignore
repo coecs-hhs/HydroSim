@@ -11,6 +11,6 @@ epanet/app/*_temp*
 
 /node_modules
 
-*.log
+*.log*
 
 mqtt/certs

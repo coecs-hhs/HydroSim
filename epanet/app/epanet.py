@@ -23,12 +23,7 @@ KEY = os.getenv("MQTT_CLIENT_KEY", "certs/server/server.key")
 CERT = os.getenv("MQTT_CLIENT_CERT", "certs/server/server.crt")
 TLS = os.getenv("MQTT_TLS_ENABLED", "true")
 
-CA = os.getenv("MQTT_CA_CERT", "")
-KEY = os.getenv("MQTT_CLIENT_KEY", "")
-CERT = os.getenv("MQTT_CLIENT_CERT", "")
-TLS = os.getenv("MQTT_TLS_ENABLED", "true")
 DEBUG = os.getenv("DEBUG", False)
-PRINTING = os.getenv("PRINTING", False)
 LOCALHOST = os.getenv("LOCALHOST", False)
 LOG_FILE = os.getenv(
     "LOG_FILE", (Path(__file__).parent.resolve() / "epanet.log").as_posix()
@@ -38,7 +33,9 @@ LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
     level=getattr(logging, LOG_LEVEL, logging.INFO),
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    handlers=[logging.FileHandler(LOG_FILE)],
+    handlers=[
+        logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes=10000, backupCount=3)
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -289,20 +286,17 @@ def write_plc(
             nodes = ep.getNodesConnectingLinksID(data["index"])
 
             if node := flow_needed(nodes):
-                flow = data["flow"]
-
                 # set flow 0 when pressure is negetive because the network is disconnected and still calculates the values
                 if nodes_data[node]["pressure"] < 0:
-                    flow = 0.0
-                    
-                if PRINTING:
-                    logger.info(
-                        f"{zone_host:<14} | {f'{link}-{node}':<12} | {'METER':<6} | {f'FLOW {flow}':<16} | Reg 700"
-                    )
+                    flow = data["flow"] = 0.0
+                else:
+                    flow = data["flow"]
+
+                logger.info(
+                    f"{zone_host:<14} | {f'{link}-{node}':<12} | {'METER':<6} | {f'FLOW {flow}':<16} | Reg 700"
+                )
                 try:
-                    client.write_registers(
-                        address=700, values=float_to_registers(flow)
-                    )
+                    client.write_registers(address=700, values=float_to_registers(flow))
                 except Exception as e:
                     logger.debug(
                         "Failed writing flow registers for %s %s-%s: %s",
@@ -313,21 +307,20 @@ def write_plc(
                     )
                     pass
 
-            if data.get("type") in ["PUMP", "VALVE", "TCV", "FCV"]:
-                if PRINTING:
-                    status = data.get("status")
-                    if data["type"] in ["VALVE", "TCV", "FCV"]:
-                        text = "OPEN" if status else "DICHT"
-                    else:
-                        text = "AAN" if status else "UIT"
+            if (data_type := data.get("type")) in ["PUMP", "VALVE", "TCV", "FCV"]:
+                status = data.get("status")
+                if data_type in ["VALVE", "TCV", "FCV"]:
+                    text = "OPEN" if status else "DICHT"
+                else:
+                    text = "AAN" if status else "UIT"
 
-                    map_dict = PUMP_MAPPING if data["type"] == "PUMP" else VALVE_MAPPING
-                    idx = get_coil_index(zone_host, link, map_dict)
+                map_dict = PUMP_MAPPING if data_type == "PUMP" else VALVE_MAPPING
+                idx = get_coil_index(zone_host, link, map_dict)
 
-                    plc_display = f"{text} (Coil {idx})"
-                    logger.info(
-                        f"{zone_host:<14} | {link:<12} | {data['type']:<6} | {text:<16} | {plc_display}, {status}"
-                    )
+                plc_display = f"{text} (Coil {idx})"
+                logger.info(
+                    f"{zone_host:<14} | {link:<12} | {data_type:<6} | {text:<16} | {plc_display}, {status}"
+                )
 
         for node, data in nodes_data.items():
             if data.get("type") == "TANK":
@@ -347,10 +340,9 @@ def write_plc(
                             address=reg_address,
                             values=float_to_registers(level),
                         )
-                        if PRINTING:
-                            logger.info(
-                                f"{zone_host:<14} | {node:<12} | {'TANK':<6} | {f'LEVEL {level}':<16} | Reg {reg_address}"
-                            )
+                        logger.info(
+                            f"{zone_host:<14} | {node:<12} | {'TANK':<6} | {f'LEVEL {level}':<16} | Reg {reg_address}"
+                        )
                     except Exception as e:
                         logger.debug(
                             "Failed writing tank register for %s %s: %s",
@@ -535,12 +527,6 @@ def main():
             t = ep.runHydraulicAnalysis()
             tstep = ep.nextHydraulicAnalysisStep()
             logger.info("Hydraulic step complete (t=%s, next_step=%s)", t, tstep)
-
-            if PRINTING:
-                print(
-                    f"{'ZONE':<14} | {'ELEMENT':<12} | {'TYPE':<6} | {'STATUS/VALUE':<16} | {'PLC/INFO'}"
-                )
-                print("-" * 75)
 
             for zone, client in clients.items():
                 nodes, links = get_zone_items(zone)
