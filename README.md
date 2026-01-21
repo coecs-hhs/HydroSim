@@ -23,7 +23,7 @@ This branch contains a folder with:
 - A **Siemens PLC TIA Portal `.zap` project file**
 - Supporting documentation related to the PLC configuration
 
-[`Siemens PLC Documentation`](PLC/docs/placeholder.md)
+[`Siemens PLC Documentation`](PLC/docs/plc.md)
 
 These files are intended for use with **Siemens TIA Portal version 15.1+** and describe the PLC logic, hardware configuration, and integration with the HydroSim system.
 
