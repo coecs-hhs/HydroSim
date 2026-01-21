@@ -31,15 +31,18 @@ To secure the connection, we use a custom Certificate Authority (CA) to sign bot
     ```bash
     ./generate_all.sh
     ```
-    **Note:** If the script doesn't run, you might need to change the permissions or the owner of the scripts to be allowed to execute this shell scripts (or you can run the script as sudo):
+    **Note:** If the script doesn't run, you might need to change the permissions or the owner of the scripts or the directory where the certificates will be placed to be allowed to execute this shell scripts:
     ```bash
     # Change permissions
     sudo chmod +x generate_*
 
-    # Change owner
+    # Change owner of the scripts
     sudo chown [your_user] generate_*
+
+    # Change owner of the 'certs' directory
+    sudo chown [your_user] certs
     ```
-    If this doesn't fix it, you might need to run the individual generation scripts (`generate_ca.sh`, `generate_server_certs.sh` & `generate_client_certs.sh`) manually.
+    If this doesn't fix it, you might need to run the individual generation scripts (`generate_ca.sh`, `generate_server_certs.sh` & `generate_client_certs.sh`) manually or you can try to run the `generate_all.sh` script as root (sudo).
 
 3.  The script will:
     -   Generate a CA certificate and key in `mqtt/certs/ca/`.
