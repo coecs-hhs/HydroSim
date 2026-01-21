@@ -58,7 +58,7 @@ sudo docker compose up -d
 ```
 
 **Note**: 
-If something goes wrong while trying to generate the certificates, check "Setup & Certificates" or run the individual generation scripts one by one manually.
+If something goes wrong while trying to generate the certificates, check ["Setup & Certificates"](docs/mqtt.md) or run the individual generation scripts one by one manually.
 
 ## Documentation
 - [Epanet](docs/epanet.md)
