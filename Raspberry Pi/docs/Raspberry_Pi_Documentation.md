@@ -8,6 +8,9 @@ It supports:
 - Offline mode (reading from JSON)
 - Live mode via MQTT with TLS
 
+Make sure the Raspberry Pi is configured according to [Netplan_Configuration.md](Netplan_Configuration.md),
+and make sure OpenVPN is properly installed [OpenVPN](OpenVPN_Guide.md).
+
 ## Dependencies
 - Python 3.9+ (version used: 3.13.7)
 - [pymodbus](https://pypi.org/project/pymodbus/) (version used: 3.11.4)
