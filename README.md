@@ -45,14 +45,15 @@ This project integrates EPANET, OpenPLC, and ScadaLTS to create a comprehensive 
 - Students training in a safe, simulated environment
 
 ## Requirements
-- docker compose
-- OpenSSL certificates see [MQTT](docs/mqtt.md)
+- Docker (and Docker compose, see [Docker installation guide](https://docs.docker.com/engine/install/)) 
+- OpenSSL certificates (see [MQTT](docs/mqtt.md))
 
 ## Installation
 ```
 git clone https://github.com/coecs-hhs/HydroSim
 cd HydroSim/mqtt
 ./generate_all.sh
+cd ..
 sudo docker compose up -d
 ```
 
