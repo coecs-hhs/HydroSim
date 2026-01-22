@@ -1,3 +1,20 @@
+# OpenPLC code
+
+Each `plc-zone` runs its own OpenPLC program. Every zone has a dedicated logic block (`ZoneXLogica`) plus a configuration that schedules the program on a 50 ms task.
+
+## Overview
+
+- **Zone 0 (`Zone0Logica`)**
+  - Controls **4 pumps** and **9 valves**.
+  - Valves follow their command bits (`Valve*_Run := Valve*_Cmd`).
+  - Pumps follow their command bits (`Pump*_Run := Pump*_Cmd`).
+  - Safety interlock: if `Valve0` is closed, all pump commands are forced off.
+
+- **Zones 1–4 (`Zone1Logica` … `Zone4Logica`)**
+  - Each zone controls **1 pump** and **2 valves**.
+  - Outputs follow their command bits.
+  - Safety interlock: if `Valve0` is closed, the pump command is forced off.
+
 # OpenPLC in the Simulation Environment
 
 This project integrates OpenPLC for simulating programmable logic controllers (PLCs) within the virtual environment. It leverages the repository [OpenPLC-Docker-AutoStart](https://github.com/koztkozt/OpenPLC-Docker-AutoStart) to automate the import and configuration of PLCs using pre-defined `.ST` files during the build process.
