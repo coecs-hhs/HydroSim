@@ -7,7 +7,7 @@ The project is implemented in **C++** with **Qt/QML** integration and visualizes
 Devices such as **Pumps** and **Valves** are displayed as interactive buttons that can be toggled directly from the UI.  
 All data structures and behavior closely resemble the real HydroSim server.
 
-If looking to contribute or add to the project, see the [Developer Guide](docs/Developer%Guide.md).
+If looking to contribute or add to the project, see the [Developer Guide](docs/Developer%20Guide.md).
 
 ---
 

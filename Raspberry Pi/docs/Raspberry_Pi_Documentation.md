@@ -73,3 +73,78 @@ Set `MQTT_ENABLED = True`. The script connects to the broker and continuously li
 - Ready Flag is located at `register + 18`
 - Values are rounded and scaled before writing
 
+
+
+
+
+
+
+
+
+
+
+## Future improvements
+
+- **Filtering by zone**
+  - You could easily filter by zone using two methods:
+
+    1. **Filter in the `create_objects` function in `dataklasse.py`:**
+       ```python
+       def create_objects(json_string: dict):
+           if not isinstance(json_string, dict):
+               raise ValueError("JSON must be a dictionary of objects")
+
+           objects = []
+           pattern = r'^([a-zA-Z]+)(\d+)-(pipe|pump|valve|house|junction|tank)(\d+)$'
+
+           for outer_key, inner_dict in json_string.items():
+               match = re.search(pattern, outer_key)
+
+               if match is None or (match.group(3) == "house" and int(match.group(4)) > 4):
+                   continue
+
+               # Add filter here, for example:
+               if int(match.group(2)) == 2:
+                   pass  # filter on zone 2
+
+               obj = create_object_from_data(inner_dict)
+               if obj is None:
+                   continue
+
+               obj.zone = int(match.group(2))
+               obj.id = int(match.group(4))
+               objects.append(obj)
+
+           return objects
+       ```
+
+    2. **Filter using MQTT topics**
+       - Currently, the wildcard `#` is used, which means all available topics are subscribed to.
+       - This would require changes on the server side so it publishes to separate topics.
+       - This would allow subscribing only to a specific zone, for example `"zone_1"`.
+
+- **MQTT reconnect after disconnect**
+  - The easiest solution would be to place the MQTT connect function inside a loop so it retries the connection.
+  - Alternatively, callback methods might be available to accomplish this more cleanly.
+
+- **MODBUS reconnect after disconnect**
+  - Similar to MQTT, the connect function could be placed in a loop so it automatically retries when the connection is lost.
+
+
+- **Simulation <-> hardware parity & bidirectional communication**
+  - Currently, the simulation and the hardware implementation mainly focus on receiving data.
+    To improve reliability and maintainability, the simulation and hardware should mirror each other more closely in terms of interfaces and behavior.
+
+  - A future improvement would be to ensure that both the simulation and the hardware:
+    - Use the same data formats and message structures
+    - Share a common interface for MQTT and MODBUS communication
+    - React to incoming data in the same way
+
+  - Additionally, the hardware could be extended to support **bidirectional communication**.
+    At the moment, the hardware primarily acts as a receiver, but it could also:
+    - Send status updates or acknowledgements
+    - Publish sensor states or diagnostics
+    - Report errors or connection states back to the server
+
+  - This would allow the simulation to better represent real hardware behavior and enable more advanced testing scenarios before deploying to physical devices.
+
