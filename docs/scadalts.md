@@ -133,6 +133,8 @@ Now you can upload your HMI image and freely design and add whatever you need. I
 
 Here you can upload your image and start adding data points.
 
+**Note** PMManager from Promotic can also be used as the SCADA interface itself. This also makes it so the objects can have animations, which might be interesting. It is however not the most intuitive piece of software to use as a SCADA-interface when it comes to programming it and interacting with it, compared to SCADA-LTS. 
+
 ---
 
 ## End of the Guide
@@ -140,3 +142,4 @@ Here you can upload your image and start adding data points.
 This concludes the guide for SCADA and how to create your own HMI.
 
 ---
+
