@@ -1,3 +1,20 @@
+# OpenPLC code
+
+Each `plc-zone` runs its own OpenPLC program. Every zone has a dedicated logic block (`ZoneXLogica`) plus a configuration that schedules the program on a 50 ms task.
+
+## Overview
+
+- **Zone 0 (`Zone0Logica`)**
+  - Controls **4 pumps** and **9 valves**.
+  - Valves follow their command bits (`Valve*_Run := Valve*_Cmd`).
+  - Pumps follow their command bits (`Pump*_Run := Pump*_Cmd`).
+  - Safety interlock: if `Valve0` is closed, all pump commands are forced off.
+
+- **Zones 1–4 (`Zone1Logica` … `Zone4Logica`)**
+  - Each zone controls **1 pump** and **2 valves**.
+  - Outputs follow their command bits.
+  - Safety interlock: if `Valve0` is closed, the pump command is forced off.
+
 # OpenPLC in the Simulation Environment
 
 This project integrates OpenPLC for simulating programmable logic controllers (PLCs) within the virtual environment. It leverages the repository [OpenPLC-Docker-AutoStart](https://github.com/koztkozt/OpenPLC-Docker-AutoStart) to automate the import and configuration of PLCs using pre-defined `.ST` files during the build process.
@@ -38,12 +55,12 @@ Download to the openplc editor to make the ladderlogic:
 - [Openplc-editor](https://autonomylogic.com/download/).
 
 ## Overview
-The ladder logic program uses holding registers to communicate with ScadaLTS. The `PumpSpeed` variable is mapped to `%QW1000`, which corresponds to the pump speed in EPANET.
+The ladder logic program uses holding registers to communicate with ScadaLTS. Pump speeds are exposed as IEEE‑754 `REAL` values that occupy two consecutive Modbus holding registers starting at address `1000`. The high word (`%QW1000`) contains the most significant bits and the low word (`%QW1001`) contains the least significant bits so that EPANET can read the values directly as `FLOAT32`.
 
 ## Variables
 Below are the primary variables used in the ladder logic:
 
-- **PumpSpeed**: Located at `%QW1000` in EPANET.
+- **PumpSpeed**: Exported as a 32-bit float split over `%QW1000`/`%QW1001` (and subsequent even/odd pairs for additional pumps).
 - **StartButton**: A functional button within ScadaLTS. Can be assigned between `%QX0.0 – %QX99.7`.  
 - **Reference**: For additional details on Modbus addressing, visit [OpenPLC-Adressing](https://autonomylogic.com/docs/2-5-modbus-addressing/).
 

@@ -1,0 +1,49 @@
+model {
+    extend server.log {
+        component fb 'Fluent-bit' {
+            description 'Verzamelt logs uit containers'
+            style {}
+
+            -> dp 'Stuurt ontvangen logdata door naar de'
+            -> server.epanet.EPAnet 'Haalt watersimulatie logs op uit'
+            -> server.ui.SCADA-LTS 'Haalt al het gelogde verkeer op uit'
+            -> server.ui.Webserver 'Haalt al het gelogde verkeer op uit'
+        }
+
+        component dp 'Data-prepper' {
+            description 'Verwerkt / verrijkt logs'
+            style {}
+
+            -> server.db 'Slaat logs op in de'
+        }
+
+        component osnode 'OpenSearch-Node' {
+            description 'Haalt logs op'
+            style {}
+            -> osdashboard 'Stuurt logdata door naar de'
+            -> server.db 'Haalt logdata op uit'
+        }
+
+        component osdashboard 'OpenSearch-Dashboard' {
+            description 'Toont logs aan de gebruiker'
+            style {}
+
+            user -> osdashboard 'Leest logging vanaf de'
+            -> server.db 'Vraagt data op om weer te geven in de'
+        }
+    }
+}
+
+views {
+    view logview of server.log {
+        title 'Server / log'
+        include
+            *,
+            server.ui,
+
+        style server.ui, user, server.db {
+            color muted
+        }
+
+    }
+}

@@ -1,0 +1,38 @@
+model {
+    extend hardware.gateway {
+        component modbusConnector 'Modbus connector' {
+            description 'Zet de data uit de objecten uit de object interpreter om naar modbus instructies'
+            style {
+                color green
+            }
+
+            -> hardware.plc0 'Stuurt modbus instructies met de data door naar'
+        }
+
+        component interpreter 'Object interpreter' {
+            description 'Zet JSON-berichten om naar objecten van klassen, gebaseerd op het soort objecten aanwezig in de simulatie'
+            style {
+                color green
+            }
+
+            -> modbusConnector 'Geeft objecten van klassen door aan'
+        }
+
+        component mqttclient 'MQTT-client' {
+            description 'Subscribeert op de topics van de HydroSim-server'
+            style {
+                color green
+            }
+
+            -> interpreter 'Geeft binnengekomen JSON-berichten door aan'
+        }
+    }
+}
+
+views {
+    view gateway of hardware.gateway{
+        title 'Hardware / Hardware connectie'
+        description 'Benodigde onderdelen voor de verbinding vanaf de HydroSim-server naar de fysieke hardware'
+        include server.hwconnectie, hardware.plc0, *
+    }
+}

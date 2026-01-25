@@ -1,0 +1,996 @@
+{
+  _type: 'element',
+  tags: null,
+  links: null,
+  viewOf: 'server.log',
+  _stage: 'layouted',
+  sourcePath: 'docs/C4 model/server/log.c4',
+  description: null,
+  title: 'Server / log',
+  id: 'logview',
+  autoLayout: {
+    direction: 'TB',
+  },
+  hash: 'eecb1e4154e6b0d7c838c9b067605eab8d00db45',
+  bounds: {
+    x: 270,
+    y: -66,
+    width: 1746,
+    height: 1034,
+  },
+  nodes: [
+    {
+      id: 'user',
+      parent: null,
+      level: 0,
+      children: [],
+      inEdges: [],
+      outEdges: [
+        '62u99e',
+        '2mtcq4',
+      ],
+      title: 'Default user',
+      modelRef: 'user',
+      shape: 'person',
+      color: 'muted',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'De operator die de waterdistributieplant aanstuurt.',
+      },
+      tags: [],
+      kind: 'actor',
+      x: 1686,
+      y: -41,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 27,
+        y: 54,
+        width: 266,
+        height: 66,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.log',
+      parent: null,
+      level: 0,
+      children: [
+        'server.log.fb',
+        'server.log.osnode',
+        'server.log.dp',
+        'server.log.osdashboard',
+      ],
+      inEdges: [
+        '62u99e',
+      ],
+      outEdges: [
+        '1v0ogt4',
+        '1b5i1zj',
+        '3l5zsi',
+        'zcj2fu',
+        'wvok9q',
+      ],
+      title: 'Logging',
+      modelRef: 'server.log',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: '- OpenSearch \r\n                - Dashboard voor binnenhalen en weergeven van log-bestanden uit de Webserver en de SCADA containers.',
+      },
+      tags: [],
+      kind: 'container',
+      depth: 1,
+      x: 735,
+      y: 6,
+      width: 909,
+      height: 615,
+      labelBBox: {
+        x: 6,
+        y: 0,
+        width: 56,
+        height: 15,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.log.fb',
+      parent: 'server.log',
+      level: 1,
+      children: [],
+      inEdges: [],
+      outEdges: [
+        '1gn16my',
+        '1v0ogt4',
+        '1b5i1zj',
+      ],
+      title: 'Fluent-bit',
+      modelRef: 'server.log.fb',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Verzamelt logs uit containers',
+      },
+      tags: [],
+      kind: 'component',
+      x: 777,
+      y: 69,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 62,
+        y: 63,
+        width: 197,
+        height: 48,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.log.osnode',
+      parent: 'server.log',
+      level: 1,
+      children: [],
+      inEdges: [],
+      outEdges: [
+        'be6qzy',
+        'zcj2fu',
+      ],
+      title: 'OpenSearch-Node',
+      modelRef: 'server.log.osnode',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Haalt logs op',
+      },
+      tags: [],
+      kind: 'component',
+      x: 1272,
+      y: 66,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 75,
+        y: 63,
+        width: 171,
+        height: 48,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.log.dp',
+      parent: 'server.log',
+      level: 1,
+      children: [],
+      inEdges: [
+        '1gn16my',
+      ],
+      outEdges: [
+        '3l5zsi',
+      ],
+      title: 'Data-prepper',
+      modelRef: 'server.log.dp',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Verwerkt / verrijkt logs',
+      },
+      tags: [],
+      kind: 'component',
+      x: 777,
+      y: 392,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 84,
+        y: 63,
+        width: 152,
+        height: 48,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.ui',
+      parent: null,
+      level: 0,
+      children: [],
+      inEdges: [
+        '1v0ogt4',
+        '2mtcq4',
+      ],
+      outEdges: [
+        '1wghmls',
+      ],
+      title: 'User Interface',
+      modelRef: 'server.ui',
+      shape: 'rectangle',
+      color: 'muted',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Interfaces voor het aansturen van de virtuele OT omgeving.',
+      },
+      tags: [],
+      kind: 'container',
+      navigateTo: 'uiview',
+      x: 309,
+      y: 98,
+      width: 336,
+      height: 180,
+      labelBBox: {
+        x: 18,
+        y: 54,
+        width: 301,
+        height: 66,
+      },
+      links: null,
+    },
+    {
+      id: 'server.epanet',
+      parent: null,
+      level: 0,
+      children: [],
+      inEdges: [
+        '1b5i1zj',
+      ],
+      outEdges: [],
+      title: 'EPAnet',
+      modelRef: 'server.epanet',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Watersimulatie programma',
+      },
+      tags: [],
+      kind: 'container',
+      navigateTo: 'epanetview',
+      x: 305,
+      y: 400,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 68,
+        y: 63,
+        width: 184,
+        height: 48,
+      },
+      links: null,
+    },
+    {
+      id: 'server.log.osdashboard',
+      parent: 'server.log',
+      level: 1,
+      children: [],
+      inEdges: [
+        '62u99e',
+        'be6qzy',
+      ],
+      outEdges: [
+        'wvok9q',
+      ],
+      title: 'OpenSearch-Dashboard',
+      modelRef: 'server.log.osdashboard',
+      shape: 'rectangle',
+      color: 'primary',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Toont logs aan de gebruiker',
+      },
+      tags: [],
+      kind: 'component',
+      x: 1282,
+      y: 399,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 50,
+        y: 63,
+        width: 221,
+        height: 48,
+      },
+      navigateTo: null,
+      links: null,
+    },
+    {
+      id: 'server.db',
+      parent: null,
+      level: 0,
+      children: [],
+      inEdges: [
+        '3l5zsi',
+        'zcj2fu',
+        'wvok9q',
+        '1wghmls',
+      ],
+      outEdges: [],
+      title: 'Database',
+      modelRef: 'server.db',
+      shape: 'storage',
+      color: 'muted',
+      style: {
+        opacity: 15,
+        size: 'md',
+      },
+      description: {
+        txt: 'Centrale database met de status van containers binnen de server',
+      },
+      tags: [],
+      kind: 'container',
+      x: 1045,
+      y: 778,
+      width: 320,
+      height: 180,
+      labelBBox: {
+        x: 35,
+        y: 54,
+        width: 249,
+        height: 65,
+      },
+      navigateTo: null,
+      links: null,
+    },
+  ],
+  edges: [
+    {
+      id: '62u99e',
+      source: 'user',
+      target: 'server.log.osdashboard',
+      label: 'Leest logging vanaf de',
+      points: [
+        [
+          2094,
+          233,
+        ],
+        [
+          2018,
+          266,
+        ],
+        [
+          1924,
+          304,
+        ],
+        [
+          1837,
+          332,
+        ],
+        [
+          1726,
+          368,
+        ],
+        [
+          1693,
+          356,
+        ],
+        [
+          1582,
+          392,
+        ],
+        [
+          1567,
+          397,
+        ],
+        [
+          1552,
+          402,
+        ],
+        [
+          1536,
+          408,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '8d6b8f',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1740,
+        y: 369,
+        width: 145,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1736,
+          y: 307,
+        },
+        {
+          x: 1742,
+          y: 481,
+        },
+        {
+          x: 1628,
+          y: 492,
+        },
+      ],
+    },
+    {
+      id: '1gn16my',
+      source: 'server.log.fb',
+      target: 'server.log.dp',
+      label: 'Stuurt ontvangen logdata door naar de',
+      points: [
+        [
+          937,
+          249,
+        ],
+        [
+          937,
+          290,
+        ],
+        [
+          937,
+          339,
+        ],
+        [
+          937,
+          382,
+        ],
+      ],
+      parent: 'server.log',
+      relations: [
+        '16oxpgk',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 873,
+        y: 321,
+        width: 244,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 873,
+          y: 321,
+        },
+      ],
+    },
+    {
+      id: 'be6qzy',
+      source: 'server.log.osnode',
+      target: 'server.log.osdashboard',
+      label: 'Stuurt logdata door naar de',
+      points: [
+        [
+          1351,
+          249,
+        ],
+        [
+          1349,
+          269,
+        ],
+        [
+          1346,
+          290,
+        ],
+        [
+          1345,
+          309,
+        ],
+        [
+          1343,
+          333,
+        ],
+        [
+          1344,
+          358,
+        ],
+        [
+          1347,
+          382,
+        ],
+      ],
+      parent: 'server.log',
+      relations: [
+        'c401g2',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1416,
+        y: 310,
+        width: 174,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1418,
+          y: 270,
+        },
+        {
+          x: 1416,
+          y: 349,
+        },
+      ],
+    },
+    {
+      id: '1v0ogt4',
+      source: 'server.log.fb',
+      target: 'server.ui',
+      label: 'Haalt al het gelogde verkeer op uit',
+      points: [
+        [
+          1097,
+          231,
+        ],
+        [
+          1115,
+          238,
+        ],
+        [
+          1134,
+          244,
+        ],
+        [
+          1152,
+          249,
+        ],
+        [
+          1322,
+          297,
+        ],
+        [
+          1380,
+          246,
+        ],
+        [
+          1544,
+          309,
+        ],
+        [
+          1593,
+          328,
+        ],
+        [
+          1642,
+          357,
+        ],
+        [
+          1685,
+          386,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '1l8sn08',
+        '1bpcsji',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 633,
+        y: 147,
+        width: 217,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 832,
+          y: 170,
+        },
+        {
+          x: 741,
+          y: 160,
+        },
+        {
+          x: 607,
+          y: 158,
+        },
+      ],
+    },
+    {
+      id: '1b5i1zj',
+      source: 'server.log.fb',
+      target: 'server.epanet',
+      label: 'Haalt watersimulatie logs op uit',
+      points: [
+        [
+          777,
+          180,
+        ],
+        [
+          603,
+          204,
+        ],
+        [
+          338,
+          249,
+        ],
+        [
+          257,
+          309,
+        ],
+        [
+          232,
+          328,
+        ],
+        [
+          212,
+          355,
+        ],
+        [
+          197,
+          383,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '1r6whhx',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 612,
+        y: 299,
+        width: 198,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 562,
+          y: 322,
+        },
+        {
+          x: 488,
+          y: 361,
+        },
+      ],
+    },
+    {
+      id: '3l5zsi',
+      source: 'server.log.dp',
+      target: 'server.db',
+      label: 'Slaat logs op in de',
+      points: [
+        [
+          1056,
+          572,
+        ],
+        [
+          1114,
+          615,
+        ],
+        [
+          1184,
+          667,
+        ],
+        [
+          1242,
+          711,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '19ll9e5',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1084,
+        y: 664,
+        width: 119,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1069,
+          y: 672,
+        },
+      ],
+    },
+    {
+      id: 'zcj2fu',
+      source: 'server.log.osnode',
+      target: 'server.db',
+      label: 'Haalt logdata op uit',
+      points: [
+        [
+          1207,
+          229,
+        ],
+        [
+          1189,
+          237,
+        ],
+        [
+          1170,
+          243,
+        ],
+        [
+          1152,
+          249,
+        ],
+        [
+          909,
+          329,
+        ],
+        [
+          751,
+          190,
+        ],
+        [
+          595,
+          392,
+        ],
+        [
+          536,
+          469,
+        ],
+        [
+          535,
+          535,
+        ],
+        [
+          595,
+          612,
+        ],
+        [
+          668,
+          706,
+        ],
+        [
+          992,
+          760,
+        ],
+        [
+          1196,
+          786,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '58dqp3',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1150,
+        y: 422,
+        width: 125,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1153,
+          y: 190,
+        },
+        {
+          x: 1161,
+          y: 323,
+        },
+        {
+          x: 1150,
+          y: 417,
+        },
+        {
+          x: 1162,
+          y: 565,
+        },
+      ],
+    },
+    {
+      id: 'wvok9q',
+      source: 'server.log.osdashboard',
+      target: 'server.db',
+      label: 'Vraagt data op om weer te geven in de',
+      points: [
+        [
+          1367,
+          572,
+        ],
+        [
+          1367,
+          613,
+        ],
+        [
+          1367,
+          661,
+        ],
+        [
+          1367,
+          704,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '1hxc99e',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1333,
+        y: 665,
+        width: 245,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1328,
+          y: 671,
+        },
+      ],
+    },
+    {
+      id: '2mtcq4',
+      source: 'user',
+      target: 'server.ui',
+      label: 'Stuurt waterdistributieplant aan op de',
+      points: [
+        [
+          2209,
+          249,
+        ],
+        [
+          2190,
+          278,
+        ],
+        [
+          2167,
+          309,
+        ],
+        [
+          2140,
+          332,
+        ],
+        [
+          2094,
+          371,
+        ],
+        [
+          2037,
+          401,
+        ],
+        [
+          1983,
+          424,
+        ],
+      ],
+      parent: null,
+      relations: [
+        'gmx9l6',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 1047,
+        y: -56,
+        width: 236,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 1624,
+          y: -26,
+        },
+        {
+          x: 489,
+          y: 44,
+        },
+      ],
+    },
+    {
+      id: '1wghmls',
+      source: 'server.ui',
+      target: 'server.db',
+      label: '[...]',
+      points: [
+        [
+          1730,
+          572,
+        ],
+        [
+          1704,
+          600,
+        ],
+        [
+          1673,
+          631,
+        ],
+        [
+          1641,
+          655,
+        ],
+        [
+          1609,
+          679,
+        ],
+        [
+          1573,
+          702,
+        ],
+        [
+          1537,
+          722,
+        ],
+      ],
+      parent: null,
+      relations: [
+        '1yiwevm',
+        '1v0yt5h',
+      ],
+      color: 'gray',
+      line: 'dashed',
+      head: 'normal',
+      navigateTo: null,
+      tags: null,
+      labelBBox: {
+        x: 320,
+        y: 937,
+        width: 25,
+        height: 18,
+      },
+      controlPoints: [
+        {
+          x: 298,
+          y: 364,
+        },
+        {
+          x: 280,
+          y: 909,
+        },
+      ],
+    },
+  ],
+  _layout: 'manual',
+}

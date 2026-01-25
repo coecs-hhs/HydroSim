@@ -1,0 +1,31 @@
+model {
+    extend server.hwconnectie {
+        component MQTT-Broker {
+            description 'MQTT-broker die het MQTT-verkeer regelt.'
+            style {
+            }
+            
+            -> OpenVPN 'Stuurt MQTT-berichten over'
+        }
+
+        component OpenVPN "OpenVPN tunnel" {
+            description 'Verzorgt een beveiligde verbinding met de server.'
+            style {
+            }
+            -> hardware.gateway.mqttclient 'Stuurt data-packets naar'
+        }
+    }
+}
+
+views {
+    view hwconview of server.hwconnectie{
+        title 'Server / Hardware connectie'
+        description 'Benodigde containers voor de verbinding naar de fysieke hardware'
+        include 
+            *
+
+        style server.ui, server.epanet {
+            color muted
+        }
+    }
+}
