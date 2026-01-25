@@ -19,7 +19,7 @@ The main view of our HMI consists of the SCADA general overview of the water net
 ![image](https://github.com/user-attachments/assets/bd601fd8-99e8-4c13-a78c-44a215460bb9)
 
 **Figure 2: General Overview**  
-![image](img/pid.png)
+![image](img/p&id.png)
 
 Our water network was developed from the beginning in an **EPANET file**. In this file, the initial water network was designed, and all values in this document originate from it. It is important to note that both **Figure 1** and **Figure 2** are based on this EPANET file.
 
@@ -142,4 +142,5 @@ Here you can upload your image and start adding data points.
 This concludes the guide for SCADA and how to create your own HMI.
 
 ---
+
 
