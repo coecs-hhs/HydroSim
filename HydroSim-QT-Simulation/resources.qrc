@@ -1,0 +1,20 @@
+<!DOCTYPE RCC>
+<RCC>
+  <qresource prefix="/qml">
+    <file>qml/Main.qml</file>
+  </qresource>
+  <qresource prefix="/images">
+    <file alias="Main Page.png">images/Main Page.png</file>
+    <file alias="Epanet Overview.png">images/Epanet Overview.png</file>
+    <file alias="Zone0.png">images/Zone0.png</file>
+    <file alias="Zone1.png">images/Zone1.png</file>
+    <file alias="Zone2.png">images/Zone2.png</file>
+    <file alias="Zone3.png">images/Zone3.png</file>
+    <file alias="Zone4.png">images/Zone4.png</file>
+  </qresource>
+  <qresource prefix="/certs">
+    <file alias="ca.crt">certs/ca.crt</file>
+    <file alias="client.crt">certs/client.crt</file>
+    <file alias="client.key">certs/client.key</file>
+  </qresource>
+</RCC>
