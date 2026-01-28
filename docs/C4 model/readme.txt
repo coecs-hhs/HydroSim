@@ -1,1 +1,0 @@
-Om te starten in de root folder gebruik de command: npx likec4 start
