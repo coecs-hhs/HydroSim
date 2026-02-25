@@ -8,7 +8,9 @@ This document describes how the current EPANET bridge works. It reflects the imp
 - **Main loop:** read PLC coils (statuses), apply them to the EPANET model, advance hydraulic step, then read node/link results and write selected values back to PLC registers and MQTT.
 
 **Creating an EpaNet water distribution network:**
+
 The water distribution network with all devices and settings is created with the Epanet 2.2. program (downloaded from the EpaNet website), running only in Windows. Save the network-file as "scenrio.inp" as this is the hard-coded name for the water distribution network used in HydroSim (see also below).
+<img width="1152" height="603" alt="epanet_network" src="https://github.com/user-attachments/assets/cba35062-4e89-491b-8e50-6565390080be" />
 
 
 **High-level flow:**
@@ -133,4 +135,5 @@ Example (link snippet):
 ---
 
 Generated to reflect [epanet/app/epanet.py](epanet/app/epanet.py).
+
 
