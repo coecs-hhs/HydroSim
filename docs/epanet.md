@@ -7,6 +7,10 @@ This document describes how the current EPANET bridge works. It reflects the imp
 - **Purpose:** run an EPANET hydraulic simulation and bridge selected node/link data to/from PLCs over Modbus TCP, and publish snapshots to MQTT.
 - **Main loop:** read PLC coils (statuses), apply them to the EPANET model, advance hydraulic step, then read node/link results and write selected values back to PLC registers and MQTT.
 
+**Creating an EpaNet water distribution network:**
+The water distribution network with all devices and settings is created with the Epanet 2.2. program (downloaded from the EpaNet website), running only in Windows. Save the network-file as "scenrio.inp" as this is the hard-coded name for the water distribution network used in HydroSim (see also below).
+
+
 **High-level flow:**
 
 - Initialize `epyt.epanet` instance using `scenario.inp` in the `epanet/app` folder.
@@ -129,3 +133,4 @@ Example (link snippet):
 ---
 
 Generated to reflect [epanet/app/epanet.py](epanet/app/epanet.py).
+
