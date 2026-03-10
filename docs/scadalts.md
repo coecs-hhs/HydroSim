@@ -6,6 +6,7 @@
 
 The ScadaLTS environment needs to be manual imported using a `.zip` configuration file located at:  
 `/scadalts/HydroSimV*.zip`, old Configs are located at `scadalts/old_config_zips`
+It run remotely, download the zip from this Github and upload it from local disk, then wait
 
 ---
 
@@ -142,5 +143,6 @@ Here you can upload your image and start adding data points.
 This concludes the guide for SCADA and how to create your own HMI.
 
 ---
+
 
 
