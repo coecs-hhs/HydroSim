@@ -15,3 +15,8 @@ epanet/app/*_temp*
 
 mqtt/certs
 website/chat-proxy.php
+
+website/chat-proxy.php
+website/*.swp
+website/adminer.php
+website/info.php
